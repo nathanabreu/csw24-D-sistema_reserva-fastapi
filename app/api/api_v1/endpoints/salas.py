@@ -4,7 +4,7 @@ from app.models.sala import Sala as SalaModel
 from app.schemas.sala import Sala, SalaCreate
 from app.db.session import get_db
 
-router = APIRouter()
+router = APIRouter(tags=["Salas"])
 
 @router.post("/salas/", response_model=Sala)
 def create_sala(sala: SalaCreate, db: Session = Depends(get_db)):

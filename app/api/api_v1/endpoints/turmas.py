@@ -4,7 +4,7 @@ from app.models.turma import Turma as TurmaModel
 from app.schemas.turma import Turma, TurmaCreate
 from app.db.session import get_db
 
-router = APIRouter()
+router = APIRouter(tags=["Turmas"])
 
 @router.post("/turmas/", response_model=Turma)
 def create_turma(turma: TurmaCreate, db: Session = Depends(get_db)):

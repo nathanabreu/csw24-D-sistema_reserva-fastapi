@@ -6,7 +6,7 @@ from app.db.session import get_db
 from app.core.permissions import checar_permissao
 from app.models.usuario import Usuario as UsuarioModel
 
-router = APIRouter()
+router = APIRouter(tags=["Aulas"])
 
 @router.post("/aulas/", response_model=Aula)
 def create_aula(aula: AulaCreate, db: Session = Depends(get_db)):

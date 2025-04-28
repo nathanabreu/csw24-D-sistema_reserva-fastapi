@@ -4,7 +4,7 @@ from app.models.disciplina import Disciplina as DisciplinaModel
 from app.schemas.disciplina import Disciplina, DisciplinaCreate
 from app.db.session import get_db
 
-router = APIRouter()
+router = APIRouter(tags=["Disciplinas"])
 
 @router.post("/disciplinas/", response_model=Disciplina)
 def create_disciplina(disciplina: DisciplinaCreate, db: Session = Depends(get_db)):

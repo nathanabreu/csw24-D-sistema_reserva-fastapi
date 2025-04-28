@@ -14,7 +14,7 @@ SECRET_KEY = "sua_chave_secreta_muito_segura"  # Em produção, use uma chave se
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 30
 
-router = APIRouter()
+router = APIRouter(tags=["Autenticação"])
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 
 def criar_token_acesso(data: dict, expires_delta: Optional[timedelta] = None):

@@ -6,7 +6,7 @@ from app.models.usuario import Usuario
 from app.schemas.usuario import UsuarioCreate, Usuario as UsuarioSchema
 from app.api.auth import get_usuario_atual
 
-router = APIRouter()
+router = APIRouter(tags=["Usuários"])
 
 @router.post("/", response_model=UsuarioSchema)
 def criar_usuario(usuario: UsuarioCreate, db: Session = Depends(get_db)):
