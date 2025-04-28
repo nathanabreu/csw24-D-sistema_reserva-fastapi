@@ -1,14 +1,15 @@
 from pydantic import BaseModel
 
 class SalaBase(BaseModel):
-    nome: str
+    numero: str
     capacidade: int
+    andar: int
+    predio_id: int
 
 class SalaCreate(SalaBase):
     pass
 
-class SalaOut(SalaBase):
+class Sala(SalaBase):
     id: int
-
     class Config:
-        orm_mode = True
+        from_attributes = True

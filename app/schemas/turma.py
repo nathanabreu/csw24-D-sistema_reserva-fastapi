@@ -1,14 +1,19 @@
 from pydantic import BaseModel
 
 class TurmaBase(BaseModel):
-    codigo: str
+    numero: str
+    semestre: str
+    professor_id: int
+    vagas: int
     disciplina_id: int
 
 class TurmaCreate(TurmaBase):
-    pass
+    alunos_ids: list[int] = []
+    horarios_ids: list[int] = []
 
-class TurmaOut(TurmaBase):
+class Turma(TurmaBase):
     id: int
-
+    alunos_ids: list[int] = []
+    horarios_ids: list[int] = []
     class Config:
-        orm_mode = True
+        from_attributes = True
