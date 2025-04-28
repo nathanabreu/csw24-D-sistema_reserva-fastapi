@@ -4,14 +4,13 @@ from app.schemas.aula import Aula, AulaCreate
 from app.models.aula import Aula as AulaModel
 from app.db.session import get_db
 from app.core.permissions import checar_permissao
-from app.models.usuario import Usuario as UsuarioModel
+from app.api.auth import get_usuario_atual
 
 router = APIRouter(tags=["Aulas"])
 
 @router.post("/aulas/", response_model=Aula)
-def create_aula(aula: AulaCreate, db: Session = Depends(get_db)):
-    usuario = db.query(UsuarioModel).filter(UsuarioModel.id == aula.usuario_id).first()
-    checar_permissao(usuario, "professor")
+def create_aula(aula: AulaCreate, db: Session = Depends(get_db), current_user = Depends(get_usuario_atual)):
+    checar_permissao(current_user, "professor")
     db_aula = AulaModel(**aula.dict())
     db.add(db_aula)
     db.commit()
@@ -27,7 +26,8 @@ def read_aulas(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
     return db.query(AulaModel).offset(skip).limit(limit).all()
 
 @router.delete("/aulas/{aula_id}")
-def delete_aula(aula_id: int, db: Session = Depends(get_db)):
+def delete_aula(aula_id: int, db: Session = Depends(get_db), current_user = Depends(get_usuario_atual)):
+    checar_permissao(current_user, "professor")
     db_aula = db.query(AulaModel).filter(AulaModel.id == aula_id).first()
     if db_aula is None:
         raise HTTPException(status_code=404, detail="Aula não encontrada")

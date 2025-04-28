@@ -3,11 +3,14 @@ from sqlalchemy.orm import Session
 from app.models.turma import Turma as TurmaModel
 from app.schemas.turma import Turma, TurmaCreate
 from app.db.session import get_db
+from app.core.permissions import checar_permissao
+from app.api.auth import get_usuario_atual
 
 router = APIRouter(tags=["Turmas"])
 
 @router.post("/turmas/", response_model=Turma)
-def create_turma(turma: TurmaCreate, db: Session = Depends(get_db)):
+def create_turma(turma: TurmaCreate, db: Session = Depends(get_db), current_user = Depends(get_usuario_atual)):
+    checar_permissao(current_user, "coordenador")
     db_turma = TurmaModel(**turma.dict())
     db.add(db_turma)
     db.commit()
@@ -23,7 +26,8 @@ def read_turmas(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
     return db.query(TurmaModel).offset(skip).limit(limit).all()
 
 @router.delete("/turmas/{turma_id}")
-def delete_turma(turma_id: int, db: Session = Depends(get_db)):
+def delete_turma(turma_id: int, db: Session = Depends(get_db), current_user = Depends(get_usuario_atual)):
+    checar_permissao(current_user, "coordenador")
     db_turma = db.query(TurmaModel).filter(TurmaModel.id == turma_id).first()
     if db_turma is None:
         raise HTTPException(status_code=404, detail="Turma não encontrada")

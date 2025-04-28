@@ -78,3 +78,6 @@ app.include_router(tiporecurso_router)
 
 from app.api.api_v1.endpoints.aula import router as aula_router
 app.include_router(aula_router)
+
+from app.api.api_v1.endpoints.predios import router as predios_router
+app.include_router(predios_router)

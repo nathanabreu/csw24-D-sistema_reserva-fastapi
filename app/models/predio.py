@@ -6,7 +6,8 @@ class Predio(Base):
 
     id = Column(Integer, primary_key=True, index=True)
     numero = Column(String, nullable=False)
-    nome = Column(String, nullable=False)
+    nome = Column(String, unique=True, index=True, nullable=False)
+    descricao = Column(String, nullable=True)
     rua = Column(String, nullable=False)
     numero_endereco = Column(String, nullable=False)
     complemento = Column(String, nullable=True)

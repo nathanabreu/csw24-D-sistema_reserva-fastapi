@@ -5,13 +5,13 @@ from app.schemas.reserva import Reserva, ReservaCreate
 from app.db.session import get_db
 from app.models.usuario import Usuario as UsuarioModel
 from app.core.permissions import checar_permissao
+from app.api.auth import get_usuario_atual
 
 router = APIRouter(tags=["Reservas"])
 
 @router.post("/reservas/", response_model=Reserva)
-def create_reserva(reserva: ReservaCreate, db: Session = Depends(get_db)):
-    usuario = db.query(UsuarioModel).filter(UsuarioModel.id == reserva.usuario_id).first()
-    checar_permissao(usuario, "professor")
+def create_reserva(reserva: ReservaCreate, db: Session = Depends(get_db), current_user = Depends(get_usuario_atual)):
+    checar_permissao(current_user, "professor")
     db_reserva = ReservaModel(**reserva.dict())
     db.add(db_reserva)
     db.commit()
@@ -27,7 +27,8 @@ def read_reservas(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)
     return db.query(ReservaModel).offset(skip).limit(limit).all()
 
 @router.delete("/reservas/{reserva_id}")
-def delete_reserva(reserva_id: int, db: Session = Depends(get_db)):
+def delete_reserva(reserva_id: int, db: Session = Depends(get_db), current_user = Depends(get_usuario_atual)):
+    checar_permissao(current_user, "professor")
     db_reserva = db.query(ReservaModel).filter(ReservaModel.id == reserva_id).first()
     if db_reserva is None:
         raise HTTPException(status_code=404, detail="Reserva não encontrada")
